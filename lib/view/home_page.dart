@@ -29,18 +29,19 @@ class _HomePageState extends State<HomePage> {
          ),
 
       ),
-      body: FutureBuilder<List<FruitSaladModel>>(
+      body: FutureBuilder<FruitSaladModel>(
         future:FruitService().getmeal(),
          builder: (context ,snapshot) {
           if (snapshot.connectionState ==ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
           
-         final user =snapshot.data!;
+         final meals =snapshot.data!.meals;
 
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text("Hello Tony,What fruit salad \ncombo do yo want today?",
             style: TextStyle(
@@ -62,9 +63,11 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding:  EdgeInsets.all(height*(10/812)),
                 child: GridView.builder(
-                itemCount: snapshot.data!.length,
+                itemCount: meals.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
+                //   mainAxisSpacing: height*(18/812),
+                //  crossAxisSpacing: width*(23/375)
                 ),
                  itemBuilder: (context ,index){
                   return Container(
@@ -81,20 +84,25 @@ class _HomePageState extends State<HomePage> {
                           width: width *(40/152),
                           height: height*(40/183),
                           decoration: BoxDecoration(shape: BoxShape.circle,
-                          color: Colors.grey),
-                          //child: Im
+                          image:DecorationImage(
+                            image:NetworkImage(meals[index].strMealThumb)),
+                          ),
                         ),
-                        Text(snapshot.data![index].toString(),
-                        style:TextStyle(
-                          fontSize: 20,
-                          color: Color(0xff27214D)
-                        ) ,)
+                        
+                        Expanded(
+                          child: Text(meals[index].strMeal,
+                          style:TextStyle(
+                            fontSize: 20,
+                            color: Color(0xff27214D)
+                          ) ,),
+                        )
                       ],
                     ),
                     
                   );
                  }),
-              ))
+              ),
+              ),
           
 
           ],
